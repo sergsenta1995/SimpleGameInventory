@@ -7,7 +7,15 @@ class Inventory : public QTableWidget {
     Q_OBJECT
 
 public:
-    Inventory(QWidget *parent = nullptr);
+    explicit Inventory(QWidget *parent = nullptr);
+
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    bool dropMimeData(int row, int column,
+                      const QMimeData *data,
+                      Qt::DropAction action) override;
+    QStringList mimeTypes() const override;
+    QMimeData* mimeData(const QList<QTableWidgetItem *> items) const override;
 };
 
 #endif // INVENTORY_HPP

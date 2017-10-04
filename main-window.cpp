@@ -9,18 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->gameObject->setFixedSize(100,100);
-
-    ui->inventory->setColumnCount(3);
-    ui->inventory->setRowCount(3);
-    ui->inventory->horizontalHeader()->hide();
-    ui->inventory->verticalHeader()->hide();
-    ui->inventory->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->inventory->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->inventory->setFixedSize(300,300);
-
-    ui->gameObject->setPixmap(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
-
     animation = new QPropertyAnimation(ui->mainMenu, "geometry");
 
     connect(ui->newGame, &QPushButton::clicked, this, MainWindow::OnStartClicked);
@@ -50,7 +38,6 @@ void MainWindow::OnMainMenuClicked()
     animation->setDuration(1000);
     animation->setEasingCurve(QEasingCurve::Linear);
     QRect startValue = ui->mainMenu->rect();
-    qDebug() << ui->mainMenu->rect();
     QRect endValue(startValue.left(), startValue.top()+50 , startValue.width(), startValue.height());
     animation->setEndValue(startValue);
     animation->start();
