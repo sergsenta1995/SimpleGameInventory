@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include <QPropertyAnimation>
 
 namespace Ui {
 class MainWindow;
@@ -16,7 +17,12 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui;    
+    QPropertyAnimation *animation;
+
+private slots:
+    void OnStartClicked();
+    void OnMainMenuClicked();
 };
 
 #endif // MAINWINDOW_HPP
