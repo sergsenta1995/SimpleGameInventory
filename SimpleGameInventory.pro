@@ -25,10 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        main-window.cpp
+        main-window.cpp \
+        inventory.cpp \
+        game-object.cpp
 
 HEADERS += \
-        main-window.hpp
+        main-window.hpp \
+        inventory.hpp \
+        game-object.hpp
 
 FORMS += \
         main-window.ui
+
+RESOURCES += \
+        images.qrc
