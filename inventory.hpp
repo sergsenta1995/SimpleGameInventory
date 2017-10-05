@@ -9,6 +9,7 @@ class Inventory : public QTableWidget {
 public:
     explicit Inventory(QWidget *parent = nullptr);
 
+private:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
     bool dropMimeData(int row, int column,
@@ -16,8 +17,8 @@ public:
                       Qt::DropAction action) override;
     QStringList mimeTypes() const override;
     QMimeData* mimeData(const QList<QTableWidgetItem *> items) const override;
-
     void rewriteItem(int row, int column, int newValue);
+
     QTableWidgetItem *dragItem;
 };
 

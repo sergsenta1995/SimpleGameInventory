@@ -5,8 +5,27 @@
 #include <QDropEvent>
 #include <QtWidgets>
 #include <QDebug>
-
 #include <QItemSelectionModel>
+
+class TransparentSelectionItemStyle : public QStyledItemDelegate
+{
+public:
+    explicit TransparentSelectionItemStyle(QObject *parent = 0)
+        : QStyledItemDelegate(parent)
+    {
+    }
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const
+    {
+        QVariant background = index.data(Qt::BackgroundRole);
+        if (background.canConvert<QBrush>())
+            painter->fillRect(option.rect, background.value<QBrush>());
+
+        painter->drawText(option.rect, index.data(Qt::DisplayRole).toString(), QTextOption(Qt::AlignRight | Qt::AlignBottom));
+        QStyledItemDelegate::paint(painter, option, index);
+    }
+};
+
 Inventory::Inventory(QWidget *parent) :
     QTableWidget(parent)
 {
@@ -24,6 +43,11 @@ Inventory::Inventory(QWidget *parent) :
     setDropIndicatorShown(true);
     setDragDropOverwriteMode(false);
     setDragDropMode(QAbstractItemView::DragDrop);
+
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    setItemDelegate(new TransparentSelectionItemStyle(this));
+    setStyleSheet("selection-background-color: rgba(128, 128, 128, 0);");
 
     dragItem = new QTableWidgetItem;
 }
@@ -112,4 +136,3 @@ void Inventory::rewriteItem(int row, int column, int newValue)
     item->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
     this->setItem(row, column, item);
 }
-
