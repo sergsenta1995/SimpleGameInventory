@@ -16,6 +16,9 @@ public:
                       Qt::DropAction action) override;
     QStringList mimeTypes() const override;
     QMimeData* mimeData(const QList<QTableWidgetItem *> items) const override;
+
+    void rewriteItem(int row, int column, int newValue);
+    QTableWidgetItem *dragItem;
 };
 
 #endif // INVENTORY_HPP

@@ -38,14 +38,14 @@ void GameObject::mousePressEvent(QMouseEvent *event)
 
     this->setPixmap(tempPixmap);
 
-    if (drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction) {
+    if (drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction)
+    {
         this->close();
-    } else {
+    } else
+    {
         this->show();
         this->setPixmap(pixmap);
     }
-
-    startDrag();
 }
 
 void GameObject::mouseMoveEvent(QMouseEvent *event)
@@ -57,7 +57,6 @@ void GameObject::startDrag()
 {
     qDebug() << "startDrag";
     QMimeData *mimeData = new QMimeData;
-    mimeData->setText("===test text===");
 
     QDrag *drag = new QDrag(this);
     drag->setMimeData(mimeData);

@@ -6,6 +6,7 @@
 #include <QtWidgets>
 #include <QDebug>
 
+#include <QItemSelectionModel>
 Inventory::Inventory(QWidget *parent) :
     QTableWidget(parent)
 {
@@ -21,48 +22,94 @@ Inventory::Inventory(QWidget *parent) :
     setAcceptDrops(true);
     setDragEnabled(true);
     setDropIndicatorShown(true);
-    setAcceptDrops(true);
     setDragDropOverwriteMode(false);
     setDragDropMode(QAbstractItemView::DragDrop);
+
+    dragItem = new QTableWidgetItem;
 }
 
 void Inventory::dragEnterEvent(QDragEnterEvent *event)
 {
-    qDebug() << event->mimeData()->text();
-
-    foreach (QString str, event->mimeData()->formats()) {
-        qDebug() << str << "\n";
-    }
-    if (event->mimeData()->hasFormat("text/plain"))
-        event->acceptProposedAction();
-    else
-        event->accept();
+    dragItem = itemAt(event->pos());
+    event->accept();
 }
 
 void Inventory::dragMoveEvent(QDragMoveEvent *event)
-{
-    qDebug() << "dragMoveEvent";
+{        
     event->accept();
 }
 
 bool Inventory::dropMimeData(int row, int column, const QMimeData *data, Qt::DropAction action)
-{
-    QTableWidget::dropMimeData(row, column, data, action);
-    qDebug() << "dropMimeData";
+{        
+    if (dragItem != nullptr && dragItem->row() == row && dragItem->column() == column)
+        return true;
+
+    if (data->formats().constFirst() == "application/x-dnditemdata")
+    {
+        QTableWidgetItem *tempItem = item(row, column);
+        if (tempItem == nullptr)
+        {
+            rewriteItem(row, column, 1);
+            return true;
+        }
+
+        int value = item(row, column)->text().toInt();
+        ++value;
+        rewriteItem(row, column, value);
+        return true;
+    }
+
+    if (data->formats().constFirst() == "application/x-qabstractitemmodeldatalist")
+    {
+        int value = data->text().toInt();
+
+        if (value == 0)
+            return true;
+
+        if (item(row, column) == nullptr)
+        {
+            rewriteItem(row, column, value);
+            setItem(dragItem->row(), dragItem->column(), new QTableWidgetItem);
+        }
+        else
+        {
+            value += item(row, column)->data(0).toInt();
+            rewriteItem(row, column, value);
+            setItem(dragItem->row(), dragItem->column(), new QTableWidgetItem);
+        }
+    }
+
+    return true;
 }
 
 QStringList Inventory::mimeTypes() const
 {
-    qDebug() << "mimeTypes";
-
-    return QTableWidget::mimeTypes() << QStringLiteral("text/plain") << QStringLiteral("application/x-qabstractitemmodeldatalist");
+    return QTableWidget::mimeTypes() << QStringLiteral("text/plain")
+                                     << QStringLiteral("application/x-qabstractitemmodeldatalist")
+                                     << QStringLiteral("application/x-dnditemdata");
 }
+
 
 QMimeData* Inventory::mimeData(const QList<QTableWidgetItem *> items) const
 {
-    QString testValue = "123";
     QMimeData *data = QTableWidget::mimeData(items);
-    data->setText(testValue);
+    if (items.at(0) == nullptr)
+    {
+        data->setText("0");
+        return data;
+    }
+
+    data->setText(items.at(0)->text());
 
     return data;
 }
+
+void Inventory::rewriteItem(int row, int column, int newValue)
+{
+    QTableWidgetItem *item = new QTableWidgetItem;
+    item->setText(QString::number(newValue));
+    item->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
+    item->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
+    this->setItem(row, column, item);
+}
+
