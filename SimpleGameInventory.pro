@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui multimedia network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,15 +27,18 @@ SOURCES += \
         main.cpp \
         main-window.cpp \
         inventory.cpp \
-        game-object.cpp
+        game-object.cpp \
+    client.cpp
 
 HEADERS += \
         main-window.hpp \
         inventory.hpp \
-        game-object.hpp
+        game-object.hpp \
+    client.hpp
 
 FORMS += \
         main-window.ui
 
 RESOURCES += \
-        images.qrc
+        images.qrc \
+        sounds.qrc
