@@ -28,13 +28,27 @@ SOURCES += \
         main-window.cpp \
         inventory.cpp \
         game-object.cpp \
-    client.cpp
+    client.cpp \
+    abstract-game-field-factory.cpp \
+    client-game-field.cpp \
+    server-game-field-factory.cpp \
+    server-inventory.cpp \
+    client-inventory.cpp \
+    server-game-object.cpp \
+    client-game-object.cpp
 
 HEADERS += \
         main-window.hpp \
         inventory.hpp \
         game-object.hpp \
-    client.hpp
+    client.hpp \
+    abstract-game-field-factory.hpp \
+    server-game-field-factory.hpp \
+    client-game-field-factory.hpp \
+    server-inventory.hpp \
+    client-inventory.hpp \
+    server-game-object.hpp \
+    client-game-object.hpp
 
 FORMS += \
         main-window.ui
