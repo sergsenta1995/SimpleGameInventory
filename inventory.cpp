@@ -50,6 +50,12 @@ Inventory::Inventory(QWidget *parent) :
     setStyleSheet("selection-background-color: rgba(128, 128, 128, 0);");
 
     dragItem = new QTableWidgetItem;
+
+    player = new QMediaPlayer;
+    player->setMedia(QUrl("qrc:/sounds/bite-apple.mp3"));
+    player->setVolume(50);
+
+    client = new Client("localhost", 2323);
 }
 
 void Inventory::dragEnterEvent(QDragEnterEvent *event)
@@ -74,12 +80,14 @@ bool Inventory::dropMimeData(int row, int column, const QMimeData *data, Qt::Dro
         if (tempItem == nullptr)
         {
             rewriteItem(row, column, 1);
+            client->slotSendToServer(row, column, 1);
             return true;
         }
 
         int value = item(row, column)->text().toInt();
         ++value;
         rewriteItem(row, column, value);
+        client->slotSendToServer(row, column, value);
         return true;
     }
 
@@ -101,6 +109,8 @@ bool Inventory::dropMimeData(int row, int column, const QMimeData *data, Qt::Dro
             rewriteItem(row, column, value);
             setItem(dragItem->row(), dragItem->column(), new QTableWidgetItem);
         }
+
+        client->slotSendToServer(row, column, value);
     }
 
     return true;
@@ -135,4 +145,31 @@ void Inventory::rewriteItem(int row, int column, int newValue)
     item->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
     item->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
     this->setItem(row, column, item);
+}
+
+void Inventory::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::RightButton)
+    {
+        QTableWidgetItem *tempItem = itemAt(event->pos());
+
+        if (tempItem == nullptr)
+            return;
+
+        int value = tempItem->data(Qt::DisplayRole).toInt();
+        --value;
+
+        player->stop();
+        player->play();
+
+        if (value == 0)
+        {
+            setItem(tempItem->row(), tempItem->column(), new QTableWidgetItem);
+            return;
+        }
+
+        tempItem->setData(Qt::DisplayRole, value);
+    }
+
+    QTableWidget::mousePressEvent(event);
 }
