@@ -1,6 +1,6 @@
 #include "server-game-object.hpp"
 
-ServerGameObject::ServerGameObject()
+ServerGameObject::ServerGameObject(QWidget *parent):
+    GameObject(parent)
 {
-
 }

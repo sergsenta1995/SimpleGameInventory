@@ -35,7 +35,8 @@ SOURCES += \
     server-inventory.cpp \
     client-inventory.cpp \
     server-game-object.cpp \
-    client-game-object.cpp
+    client-game-object.cpp \
+    server.cpp
 
 HEADERS += \
         main-window.hpp \
@@ -48,7 +49,8 @@ HEADERS += \
     server-inventory.hpp \
     client-inventory.hpp \
     server-game-object.hpp \
-    client-game-object.hpp
+    client-game-object.hpp \
+    server.hpp
 
 FORMS += \
         main-window.ui

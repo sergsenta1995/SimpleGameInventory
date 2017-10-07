@@ -3,10 +3,9 @@
 
 #include "game-object.hpp"
 
-class ServerGameObject : public GameObject
-{
+class ServerGameObject : public GameObject {
 public:
-    ServerGameObject();
+    explicit ServerGameObject(QWidget *parent = nullptr);
 };
 
 #endif // SERVERGAMEOBJECT_HPP

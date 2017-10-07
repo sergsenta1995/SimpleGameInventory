@@ -3,13 +3,13 @@
 
 #include <QMainWindow>
 #include <QPropertyAnimation>
+#include "abstract-game-field-factory.hpp"
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -18,7 +18,8 @@ public:
 
 private:
     Ui::MainWindow *ui;    
-    QPropertyAnimation *animation;
+    QPropertyAnimation *animation;    
+    QDialog *clientOrServerChoise;
 
 private slots:
     void OnStartClicked();

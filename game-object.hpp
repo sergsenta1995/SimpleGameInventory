@@ -7,10 +7,7 @@ class GameObject : public QLabel {
     Q_OBJECT
 
 public:
-    explicit GameObject(QWidget *parent = nullptr);
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void startDrag();
+    explicit GameObject(QWidget *parent = nullptr);   
 };
 
 #endif // GAME_OBJECT_HPP
