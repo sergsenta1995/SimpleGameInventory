@@ -3,6 +3,7 @@
 
 #include "inventory.hpp"
 #include "server.hpp"
+#include "database-facade.hpp"
 
 class ServerInventory : public Inventory {
     Q_OBJECT
@@ -16,7 +17,8 @@ public slots:
     void applyObjectToInventoryChange(int dropRow, int dropColumn, int dropValue);
 
 private:
-    Server *server;
+    Server         *server;
+    DatabaseFacade *facade;
 };
 
 #endif // SERVERINVENTORY_HPP

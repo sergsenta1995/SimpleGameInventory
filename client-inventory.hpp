@@ -4,6 +4,9 @@
 #include <QMediaPlayer>
 #include "inventory.hpp"
 #include "client.hpp"
+#include "database-facade.hpp"
+
+class DatabaseFacade;
 
 class ClientInventory : public Inventory {
 public:
@@ -25,6 +28,7 @@ private:
     QTableWidgetItem *dragItem;
     QMediaPlayer     *player;
     Client           *client;    
+    DatabaseFacade   *facade;
 };
 
 #endif // CLIENTINVENTORY_HPP

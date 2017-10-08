@@ -44,6 +44,10 @@ ClientInventory::ClientInventory(QWidget *parent):
 
     setItemDelegate(new TransparentSelectionItemStyle(this));
     setStyleSheet("selection-background-color: rgba(128, 128, 128, 0);");
+
+    facade = new DatabaseFacade();
+    facade->initInventory(*this, 1);
+
 }
 
 void ClientInventory::startClient()
@@ -53,21 +57,8 @@ void ClientInventory::startClient()
 
 void ClientInventory::dragEnterEvent(QDragEnterEvent *event)
 {        
-    qDebug() << "drag enter";
-    if (dragItem == nullptr)
-        qDebug() << "dragItem == nullptr";
-    else
-        qDebug() << "else " << dragItem->row() << dragItem->column();
     event->accept();
-
-    qDebug() << "POOOS!" << event->pos();
-
     dragItem = itemAt(event->pos());
-
-    if (dragItem == nullptr)
-        qDebug() << "2 dragItem == nullptr";
-    else
-        qDebug() << "2 else " << dragItem->row() << dragItem->column();
 }
 
 void ClientInventory::dragMoveEvent(QDragMoveEvent *event)
@@ -106,6 +97,7 @@ bool ClientInventory::dropMimeData(int row, int column, const QMimeData *data, Q
     rewriteItem(row, column, dragValue);
     qDebug() << dragItem->row() << dragItem->column();
     client->slotSendToServer(row, column, dragValue, dragItem->row(), dragItem->column());
+    facade->updateCell(1, dragItem->row(), dragItem->column(), 0);
     setItem(dragItem->row(), dragItem->column(), nullptr);
 
     dragItem = nullptr;
@@ -142,14 +134,16 @@ void ClientInventory::rewriteItem(int row, int column, int newValue)
     {
         newItem = new QTableWidgetItem;
         newItem->setText(QString::number(newValue));
+        facade->updateCell(1, row, column, newValue);
     }
     else
     {
         int oldValue = newItem->data(Qt::DisplayRole).toInt();
         newItem->setText(QString::number(oldValue + newValue));
+        facade->updateCell(1, row, column, oldValue + newValue);
     }
     newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
-    newItem->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
+    newItem->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));    
     this->setItem(row, column, newItem);
 }
 

@@ -3,6 +3,8 @@
 ServerInventory::ServerInventory(QWidget *parent):
     Inventory(parent)
 {
+    facade = new DatabaseFacade();
+    facade->initInventory(*this);
 }
 
 void ServerInventory::startServer()
@@ -30,7 +32,7 @@ void ServerInventory::applyInventoryToInventoryChange(int dropRow, int dropColum
     }
     newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
     newItem->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
-    //this->setItem(dragRow, dragColumn, nullptr);
+    this->setItem(dragRow, dragColumn, nullptr);
     this->setItem(dropRow, dropColumn, newItem);
 }
 

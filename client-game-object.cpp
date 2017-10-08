@@ -13,8 +13,6 @@ ClientGameObject::ClientGameObject(QWidget *parent):
 
 void ClientGameObject::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "mousePressEvent";
-
     QPixmap pixmap = *this->pixmap();
 
     QByteArray itemData;
