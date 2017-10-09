@@ -21,29 +21,18 @@ void Client::slotError(QAbstractSocket::SocketError err)
     qDebug() << strError;
 }
 
-void Client::slotSendToServer(int dropRow, int dropColumn, int dropValue)
+void Client::sendToServer(const QVector<int> &sentData)
 {
     QByteArray  block;
     QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_3);
-    const int NUMBER_OF_ARGUMENTS = 3;
-    out << quint16(0) << NUMBER_OF_ARGUMENTS << dropRow << dropColumn << dropValue;
+    out.setVersion(QDataStream::Qt_5_9);
+    out << quint16(0) << sentData.size();
+    foreach (int element, sentData) {
+        out << element;
+    }
+    qDebug() << out;
     out.device()->seek(0);
     out << quint16(block.size() - sizeof(quint16));
 
     write(block);
 }
-
-void Client::slotSendToServer(int dropRow, int dropColumn, int dropValue, int dragRow, int dragColumn)
-{
-    QByteArray  block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_3);
-    const int NUMBER_OF_ARGUMENTS = 5;
-    out << quint16(0) << NUMBER_OF_ARGUMENTS << dropRow << dropColumn << dropValue << dragRow << dragColumn;
-    out.device()->seek(0);
-    out << quint16(block.size() - sizeof(quint16));
-
-    write(block);
-}
-

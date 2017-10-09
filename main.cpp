@@ -1,6 +1,7 @@
 #include "main-window.hpp"
 #include <QApplication>
 #include <QSqlQuery>
+#include <QDir>
 #include <QDebug>
 
 int main(int argc, char *argv[])
@@ -14,9 +15,15 @@ int main(int argc, char *argv[])
     }
 
     QSqlDatabase db = QSqlDatabase::addDatabase(db_type);
-    db.setDatabaseName("D:\\SimpleInventoryDB\\simple_inventory_db.sqlite");
+
+    QDir workingDirectory("../");
+    db.setDatabaseName(workingDirectory.absolutePath() + "/SimpleGameInventory/simple-inventory-db/simple_inventory_db.sqlite");
+
     if (!db.open())
+    {
         qDebug() << "DB is not open";
+        return a.exec();
+    }
     else
         qDebug() << "Ok";
 

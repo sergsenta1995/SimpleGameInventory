@@ -4,7 +4,6 @@
 #include <QMimeData>
 #include <QDrag>
 #include <QPainter>
-#include <QDebug>
 
 ClientGameObject::ClientGameObject(QWidget *parent):
     GameObject(parent)
@@ -21,6 +20,8 @@ void ClientGameObject::mousePressEvent(QMouseEvent *event)
 
     QMimeData *mimeData = new QMimeData;
     mimeData->setData("application/x-dnditemdata", itemData);
+    mimeData->setProperty("type", type);
+    mimeData->setProperty("picture", picture);
 
     QDrag *drag = new QDrag(this);
     drag->setMimeData(mimeData);
@@ -43,9 +44,4 @@ void ClientGameObject::mousePressEvent(QMouseEvent *event)
         this->show();
         this->setPixmap(pixmap);
     }
-}
-
-void ClientGameObject::mouseMoveEvent(QMouseEvent *event)
-{
-    qDebug() << "move";
 }

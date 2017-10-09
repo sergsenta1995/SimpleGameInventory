@@ -1,7 +1,6 @@
 #include "inventory.hpp"
-
 #include <QHeaderView>
-
+#include <QSqlResult>
 
 Inventory::Inventory(QWidget *parent) :
     QTableWidget(parent)
@@ -18,5 +17,7 @@ Inventory::Inventory(QWidget *parent) :
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionMode(QAbstractItemView::SingleSelection);
 
+    facade = new InventoryFacade();
+    facade->init(*this);
 }
 

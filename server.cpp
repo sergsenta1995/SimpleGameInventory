@@ -6,7 +6,7 @@ Server::Server(int port):
     if (!listen(QHostAddress::Any, port)) {
         qDebug() << "Ошибка. Сервер не стартовал:"
                  << errorString();
-        close();    // ???
+        close();
         return;
     }
     connect(this, SIGNAL(newConnection()), this, SLOT(slotNewConnection()));    
@@ -37,19 +37,18 @@ void Server::slotReadClient()
             break;
         }
 
-        int numArguments, dropRow, dropColumn, dropValue, dragRow, dragColumn;
-        in >> numArguments;
+        QVector<int> sentData;
 
-        if (numArguments == 3)
+        int dataSize;
+        in >> dataSize;
+        for (int i = 0; i < dataSize; ++i)
         {
-            in >> dropRow >> dropColumn >> dropValue;
-            emit acceptedObjectToInventoryData(dropRow, dropColumn, dropValue);
+            int element;
+            in >> element;
+            sentData << element;
         }
-        else
-        {
-            in >> dropRow >> dropColumn >> dropValue >> dragRow >> dragColumn;
-            emit acceptedInventoryToInventoryData(dropRow, dropColumn, dropValue, dragRow, dragColumn);
-        }
+
+        emit applyData(sentData);
 
         nextBlockSize = 0;
     }

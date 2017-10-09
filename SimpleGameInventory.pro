@@ -16,6 +16,7 @@ TEMPLATE = app
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += PROJECT_PATH="\"$$PWD\""
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -29,34 +30,31 @@ SOURCES += \
         inventory.cpp \
         game-object.cpp \
     client.cpp \
-    abstract-game-field-factory.cpp \
-    client-game-field.cpp \
-    server-game-field-factory.cpp \
     server-inventory.cpp \
     client-inventory.cpp \
     server-game-object.cpp \
     client-game-object.cpp \
     server.cpp \
-    database-facade.cpp
+    inventory-facade.cpp \
+    game-object-facade.cpp
 
 HEADERS += \
         main-window.hpp \
         inventory.hpp \
         game-object.hpp \
     client.hpp \
-    abstract-game-field-factory.hpp \
-    server-game-field-factory.hpp \
-    client-game-field-factory.hpp \
     server-inventory.hpp \
     client-inventory.hpp \
     server-game-object.hpp \
     client-game-object.hpp \
     server.hpp \
-    database-facade.hpp
+    inventory-facade.hpp \
+    game-object-facade.hpp
 
 FORMS += \
         main-window.ui
 
 RESOURCES += \
         images.qrc \
-        sounds.qrc
+        sounds.qrc \
+    database.qrc

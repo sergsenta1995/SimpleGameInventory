@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>simple-inventory-db/simple_inventory_db.sqlite</file>
+    </qresource>
+</RCC>

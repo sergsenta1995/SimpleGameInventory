@@ -3,22 +3,27 @@
 
 #include "inventory.hpp"
 #include "server.hpp"
-#include "database-facade.hpp"
+#include "inventory-facade.hpp"
 
+/*!
+ * \brief Класс инвентаря на стороне сервера.
+ * \details Не поддерживает drag 'n' drop, принимает изменения от виджета на стороне клиента.
+ *          Визуальная составляющая инициализируется в базовом классе.
+ */
 class ServerInventory : public Inventory {
     Q_OBJECT
 
 public:
     explicit ServerInventory(QWidget *parent = nullptr);
+    //! Инициализирует объект ервера, который отвечает за приём данных.
     void startServer();
 
 public slots:
-    void applyInventoryToInventoryChange(int dropRow, int dropColumn, int dropValue, int dragRow, int dragColumn);
-    void applyObjectToInventoryChange(int dropRow, int dropColumn, int dropValue);
+    //! Применяет изменения виджета отосланные от клиента.
+    void slotApplyData(const QVector<int> &sentData);
 
 private:
-    Server         *server;
-    DatabaseFacade *facade;
+    Server *server; ///< объект для приёма данных от клиента
 };
 
 #endif // SERVERINVENTORY_HPP
