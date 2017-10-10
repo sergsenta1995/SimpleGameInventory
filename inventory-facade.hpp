@@ -14,7 +14,7 @@ public:
     //! Инициализирует ячейки инвентаря.
     void init(Inventory &inventory);
     //! Обновляет БД с содержимым инвентаря.
-    void update(const QList<QVariant> &fieldsValue);
+    void update(const QVector<int> &fieldsValue);
 };
 
 #endif // INVENTORYFACADE_HPP

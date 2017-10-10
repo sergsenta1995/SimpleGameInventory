@@ -56,7 +56,11 @@ void ClientInventory::startClient()
 void ClientInventory::dragEnterEvent(QDragEnterEvent *event)
 {        
     event->accept();    
-    dragItem = itemAt(event->pos());    
+
+    if (itemAt(event->pos()) == nullptr)
+        return;
+    else
+        dragItem = itemAt(event->pos());
 }
 
 void ClientInventory::dragMoveEvent(QDragMoveEvent *event)
@@ -68,8 +72,7 @@ bool ClientInventory::dropMimeData(int row, int column, const QMimeData *data, Q
 {    
     int dragValue = data->text().toInt();
     QString type = data->property("type").toString();
-    QString picture = data->property("picture").toString();
-    qDebug() << "type " << type << "; value " << dragValue << "; picture " << picture;
+    QString picture = data->property("picture").toString();    
 
     // Подняли ячейку и отпустили туда же или
     if ((dragItem != nullptr && dragItem->row() == row && dragItem->column() == column) ||
@@ -172,11 +175,13 @@ void ClientInventory::mousePressEvent(QMouseEvent *event)
         if (value == 0)
         {
             client->sendToServer(QVector<int>{tempItem->row(), tempItem->column(), 0});
+            facade->update(QVector<int>{1, tempItem->row(), tempItem->column(), 0});
             setItem(tempItem->row(), tempItem->column(), nullptr);
             return;
         }
 
         client->sendToServer(QVector<int>{tempItem->row(), tempItem->column(), -1});
+        facade->update(QVector<int>{1, tempItem->row(), tempItem->column(), value});
 
         tempItem->setData(Qt::DisplayRole, value);
     }

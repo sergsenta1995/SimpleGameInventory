@@ -1,5 +1,6 @@
 #include "inventory-facade.hpp"
 #include <QSqlQuery>
+#include <QDebug>
 
 InventoryFacade::InventoryFacade()
 {
@@ -24,8 +25,11 @@ void InventoryFacade::init(Inventory &inventory)
         QString value = query.value("count_objects").toString();
         QTableWidgetItem *newItem = new QTableWidgetItem(value);
         newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
-        newItem->setBackground(QPixmap(query.value("picture").toString()).scaled(100, 100));
-        newItem->setData(Qt::UserRole, query.value("type").toString());
+        QString picture = query.value("picture").toString();
+        QString type = query.value("type").toString();
+        QStringList dataList = {type, picture};
+        newItem->setBackground(QPixmap(picture).scaled(100, 100));
+        newItem->setData(Qt::UserRole, dataList);
         inventory.setItem(row, column, newItem);
     }
 
@@ -42,8 +46,11 @@ void InventoryFacade::init(Inventory &inventory)
     inventory.setRowCount(dimension);
 }
 
-void InventoryFacade::update(const QList<QVariant> &fieldsValue)
+void InventoryFacade::update(const QVector<int> &fieldsValue)
 {
+    qDebug() << "===========================";
+    for (int i = 0; i < fieldsValue.size(); ++i)
+        qDebug() << fieldsValue.at(i);
     QSqlQuery query;
 
     if (fieldsValue[3] == 0)
@@ -55,6 +62,7 @@ void InventoryFacade::update(const QList<QVariant> &fieldsValue)
         query.addBindValue(fieldsValue[0]);
         query.addBindValue(fieldsValue[1]);
         query.addBindValue(fieldsValue[2]);
+        query.exec();
         return;
     }
     query.prepare("INSERT OR REPLACE INTO inventory_content "
@@ -63,5 +71,6 @@ void InventoryFacade::update(const QList<QVariant> &fieldsValue)
     query.addBindValue(fieldsValue[1]);
     query.addBindValue(fieldsValue[2]);
     query.addBindValue(fieldsValue[3]);
-    query.exec();
+    if (query.exec() == false)
+        qDebug() << "!!!!!!!!!";
 }
