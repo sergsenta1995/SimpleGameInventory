@@ -6,14 +6,19 @@
 
 class InventoryFacade;
 
-class Inventory : public QTableWidget {
+class Inventory : QObject{
     Q_OBJECT
 
 public:
-    explicit Inventory(QWidget *parent = nullptr);
+    explicit Inventory();
+    void update(int row, int column, int value);
+    void setValue(int row, int column, int value);
+    void setupSize(int dimension);
+    QVector<QVector<int>> getContent();
 
 protected:
     InventoryFacade *facade;
+    QVector<QVector<int>> content;
 };
 
 #endif // INVENTORY_HPP

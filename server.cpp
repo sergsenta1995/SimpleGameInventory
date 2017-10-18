@@ -13,42 +13,41 @@ Server::Server(int port):
 }
 
 void Server::slotNewConnection()
-{
-    qDebug() << "new connection";
+{   
     QTcpSocket* clientSocket = nextPendingConnection();
     connect(clientSocket, SIGNAL(disconnected()),  clientSocket, SLOT(deleteLater()));
     connect(clientSocket, SIGNAL(readyRead()),     this,         SLOT(slotReadClient()));
 }
 
 void Server::slotReadClient()
-{
-    QTcpSocket* pClientSocket = (QTcpSocket*)sender();
-    QDataStream in(pClientSocket);
+{    
+    QTcpSocket* clientSocket = (QTcpSocket*)sender();
+    QDataStream in(clientSocket);
     in.setVersion(QDataStream::Qt_5_9);
-    for (;;) {
-        if (!nextBlockSize) {
-            if (pClientSocket->bytesAvailable() < (int)sizeof(quint16)) {
+    for (;;)
+    {
+        if (!nextBlockSize)
+        {
+            if (clientSocket->bytesAvailable() < (int)sizeof(quint16)) {
                 break;
             }
             in >> nextBlockSize;
         }
 
-        if (pClientSocket->bytesAvailable() < nextBlockSize) {
+        if (clientSocket->bytesAvailable() < nextBlockSize) {
             break;
         }
 
-        QVector<int> sentData;
+        int row = 0;
+        in >> row;
 
-        int dataSize;
-        in >> dataSize;
-        for (int i = 0; i < dataSize; ++i)
-        {
-            int element;
-            in >> element;
-            sentData << element;
-        }
+        int column = 0;
+        in >> column;
 
-        emit applyData(sentData);
+        int value = 0;
+        in >> value;
+
+        emit applyData(row, column, value);
 
         nextBlockSize = 0;
     }

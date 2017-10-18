@@ -21,16 +21,14 @@ void Client::slotError(QAbstractSocket::SocketError err)
     qDebug() << strError;
 }
 
-void Client::sendToServer(const QVector<int> &sentData)
+void Client::sendToServer(int row, int column, int value)
 {
     QByteArray  block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_9);
-    out << quint16(0) << sentData.size();
-    foreach (int element, sentData) {
-        out << element;
-    }
-    qDebug() << out;
+
+    out << quint16(0);
+    out << row << column << value;
     out.device()->seek(0);
     out << quint16(block.size() - sizeof(quint16));
 

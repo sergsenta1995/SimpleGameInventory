@@ -1,23 +1,36 @@
 #include "inventory.hpp"
-#include <QHeaderView>
-#include <QSqlResult>
 
-Inventory::Inventory(QWidget *parent) :
-    QTableWidget(parent)
+#include <QDebug>
+
+Inventory::Inventory()
 {
-    verticalHeader()->hide();
-    verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    horizontalHeader()->hide();
-    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-    setColumnCount(3);
-    setRowCount(3);
-    setFixedSize(300,300);
-
-    setEditTriggers(QAbstractItemView::NoEditTriggers);
-    setSelectionMode(QAbstractItemView::SingleSelection);
-
-    facade = new InventoryFacade();
     facade->init(*this);
 }
 
+void Inventory::update(int row, int column, int value)
+{
+    if (value == 0)
+        content[row][column] = 0;
+    else
+        content[row][column] += value;
+
+    facade->update(row, column, content[row][column]);
+}
+
+void Inventory::setValue(int row, int column, int value)
+{
+    content[row][column] = value;
+}
+
+void Inventory::setupSize(int dimension)
+{
+    content = QVector<QVector<int>>(dimension);
+
+    for(int i = 0; i < dimension; i++)
+        content[i] = QVector<int>(dimension);
+}
+
+QVector<QVector<int> > Inventory::getContent()
+{
+    return content;
+}

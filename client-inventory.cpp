@@ -8,9 +8,6 @@
 #include <QMimeData>
 #include <QApplication>
 
-/*!
- * \brief Класс-делегат, который настраивает прозрачность ячейки при перетаскивании.
- */
 class TransparentSelectionItemStyle : public QStyledItemDelegate
 {
 public:
@@ -31,18 +28,18 @@ public:
 };
 
 ClientInventory::ClientInventory(QWidget *parent):
-    Inventory(parent),
+    InventoryWidget(parent),
     dragItem(nullptr),
     player(new QMediaPlayer)
 {
     setAcceptDrops(true);
     setDragEnabled(true);
     setDropIndicatorShown(true);
-    setDragDropOverwriteMode(false);
+    setDragDropOverwriteMode(true);
     setDragDropMode(QAbstractItemView::DragDrop);
 
     player->setMedia(QUrl("qrc:/sounds/bite-apple.mp3"));
-    player->setVolume(50);   
+    player->setVolume(50);
 
     setItemDelegate(new TransparentSelectionItemStyle(this));
     setStyleSheet("selection-background-color: rgba(128, 128, 128, 0);");
@@ -54,51 +51,63 @@ void ClientInventory::startClient()
 }
 
 void ClientInventory::dragEnterEvent(QDragEnterEvent *event)
-{        
+{
+    // Если предмет захвачен, продолжать его держать.
+    if (dragItem != nullptr)
+    {
+        event->accept();
+        return;
+    }
+
     event->accept();    
 
+    // Захватываем ячейку.
     if (itemAt(event->pos()) == nullptr)
         return;
-    else
-        dragItem = itemAt(event->pos());
+    else            
+        dragItem = itemAt(event->pos());    
 }
 
 void ClientInventory::dragMoveEvent(QDragMoveEvent *event)
 {
-    event->accept();
 }
 
 bool ClientInventory::dropMimeData(int row, int column, const QMimeData *data, Qt::DropAction action)
-{    
+{
     int dragValue = data->text().toInt();
-    QString type = data->property("type").toString();
-    QString picture = data->property("picture").toString();    
 
-    // Подняли ячейку и отпустили туда же или
-    if ((dragItem != nullptr && dragItem->row() == row && dragItem->column() == column) ||
-    // или перетаскиваемый предмет из ячейки пуст.
-        (dragItem == nullptr && dragValue == 0 && data->formats().at(0) == "application/x-qabstractitemmodeldatalist"))
+    // Перетаскивание предмета в инвентарь.
+    if (data->formats().at(0) == "application/x-dnditemdata")
     {
-        return true;
-    }
-
-    // Перетаскиваем предмет в инвентарь.
-    if (dragValue == 0 && dragItem == nullptr)
-    {
-        client->sendToServer(QVector<int>{row, column, 1});
-
-        rewriteItem(row, column, 1, QStringList{type, picture});
+        emit changeCellData(row, column, 1);
+        rewriteItem(row, column, 1);
+        client->sendToServer(row, column, 1);
         dragItem = nullptr;
         return true;
     }
 
-    // Перетаскиваем между ячейками (перетаскиваемая не пуста).    
-    rewriteItem(row, column, dragValue, QStringList{type, picture});
-    client->sendToServer(QVector<int>{row, column, dragValue, dragItem->row(), dragItem->column()});
-    facade->update({1, dragItem->row(), dragItem->column(), 0});
-    setItem(dragItem->row(), dragItem->column(), nullptr);
+    // Перетаскивание ячейки инветраря.
 
-    // Затираем перетаскиваемое.
+    // Перетаскиваемая ячейка пуста.
+    if (dragItem == nullptr)
+        return true;
+
+    // Подняли ячейку и отпустили туда же или
+    if (dragItem != nullptr && dragItem->row() == row && dragItem->column() == column)
+    {
+        dragItem = nullptr;
+        return true;
+    }
+
+    // Перетаскиваем между ячейками (перетаскиваемая не пуста).   
+    emit changeCellData(row, column, dragValue);
+    rewriteItem(row, column, dragValue);
+    client->sendToServer(row, column, dragValue);
+
+    emit changeCellData(dragItem->row(), dragItem->column(), 0);
+    client->sendToServer(dragItem->row(), dragItem->column(), 0);
+    setItem(dragItem->row(), dragItem->column(), nullptr);    
+
     dragItem = nullptr;
 
     return true;
@@ -116,44 +125,31 @@ QMimeData* ClientInventory::mimeData(const QList<QTableWidgetItem *> items) cons
 {
     QMimeData *data = QTableWidget::mimeData(items);
     if (items.at(0) == nullptr)
-    {        
+    {
         data->setText("0");        
         return data;
     }
 
-    const int TYPE    = 0;
-    const int PICTURE = 1;
+    data->setText(items.at(0)->text());
 
-    // Дополнительные сведения о предмете будем хранить в пользовательской роли.
-    data->setProperty("type", items.at(0)->data(Qt::UserRole).toStringList().at(TYPE));
-    data->setProperty("picture", items.at(0)->data(Qt::UserRole).toStringList().at(PICTURE));
-    data->setText(items.at(0)->text());      
-
-    return data;
+    return data;    
 }
 
-void ClientInventory::rewriteItem(int row, int column, int newValue, const QVariant &userData)
-{    
-    const int TYPE    = 0;
-    const int PICTURE = 1;
-
+void ClientInventory::rewriteItem(int row, int column, int newValue)
+{
     QTableWidgetItem *newItem = item(row, column);
     if (newItem == nullptr)
     {
         newItem = new QTableWidgetItem;
-        newItem->setText(QString::number(newValue));
-        newItem->setData(Qt::UserRole, userData);
-        facade->update({1, row, column, newValue});
+        newItem->setText(QString::number(newValue));        
     }
     else
     {
         int oldValue = newItem->data(Qt::DisplayRole).toInt();
         newItem->setText(QString::number(oldValue + newValue));        
-        facade->update({1, row, column, oldValue + newValue});
     }
     newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
-    newItem->setBackground(QPixmap(userData.toStringList().at(PICTURE)).scaled(100, 100));
-
+    newItem->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
     this->setItem(row, column, newItem);
 }
 
@@ -173,15 +169,15 @@ void ClientInventory::mousePressEvent(QMouseEvent *event)
         player->play();
 
         if (value == 0)
-        {
-            client->sendToServer(QVector<int>{tempItem->row(), tempItem->column(), 0});
-            facade->update(QVector<int>{1, tempItem->row(), tempItem->column(), 0});
+        {            
+            emit changeCellData(tempItem->row(), tempItem->column(), 0);
+            client->sendToServer(tempItem->row(), tempItem->column(), 0);
             setItem(tempItem->row(), tempItem->column(), nullptr);
             return;
         }
 
-        client->sendToServer(QVector<int>{tempItem->row(), tempItem->column(), -1});
-        facade->update(QVector<int>{1, tempItem->row(), tempItem->column(), value});
+        emit changeCellData(tempItem->row(), tempItem->column(), -1);
+        client->sendToServer(tempItem->row(), tempItem->column(), -1);
 
         tempItem->setData(Qt::DisplayRole, value);
     }

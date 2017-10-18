@@ -12,7 +12,7 @@ class Client : public QTcpSocket {
 public:
     Client(const QString& host, int port);
     //! Отправляет сообщение на сервер.
-    void sendToServer(const QVector<int> &sentData);
+    void sendToServer(int row, int column, int value);
 
 private:
     quint16 nextBlockSize;

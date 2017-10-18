@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->exit, &QPushButton::clicked, this, MainWindow::onExitClicked);
     connect(ui->toMainMenu, &QPushButton::clicked, this, MainWindow::onMainMenuClicked);
 
+
     configurationSetup(parent);
 }
 
@@ -41,11 +42,13 @@ void MainWindow::configurationSetup(QWidget *parent)
     {
         ui->stackedWidget->setCurrentIndex(SERVER_WIDGET);
         ui->serverInventory->startServer();
+        presenter = new InventoryPresenter(new Inventory, ui->serverInventory);
     }
     else
     {
         ui->stackedWidget->setCurrentIndex(CLIENT_WIDGET);
         ui->clientInventory->startClient();
+        presenter = new InventoryPresenter(new Inventory, ui->clientInventory);
     }
 }
 

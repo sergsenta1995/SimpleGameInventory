@@ -8,13 +8,14 @@ class Inventory;
 /*!
  * \brief Класс для работы с данными инвентаря.
  */
-class InventoryFacade {
+class InventoryFacade : QObject{
+    Q_OBJECT
 public:
     explicit InventoryFacade();
     //! Инициализирует ячейки инвентаря.
     void init(Inventory &inventory);
     //! Обновляет БД с содержимым инвентаря.
-    void update(const QVector<int> &fieldsValue);
+    void update(int row, int column, int value);
 };
 
 #endif // INVENTORYFACADE_HPP

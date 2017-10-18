@@ -1,7 +1,7 @@
 #ifndef SERVERINVENTORY_HPP
 #define SERVERINVENTORY_HPP
 
-#include "inventory.hpp"
+#include "inventory-widget.hpp"
 #include "server.hpp"
 #include "inventory-facade.hpp"
 
@@ -10,7 +10,7 @@
  * \details Не поддерживает drag 'n' drop, принимает изменения от виджета на стороне клиента.
  *          Визуальная составляющая инициализируется в базовом классе.
  */
-class ServerInventory : public Inventory {
+class ServerInventory : public InventoryWidget {
     Q_OBJECT
 
 public:
@@ -20,7 +20,8 @@ public:
 
 public slots:
     //! Применяет изменения виджета отосланные от клиента.
-    void slotApplyData(const QVector<int> &sentData);
+    //void slotApplyData(const QVector<int> &sentData);
+    void slotApplyData(int dropRow, int dropColumn, int dropValue);
 
 private:
     Server *server; ///< объект для приёма данных от клиента

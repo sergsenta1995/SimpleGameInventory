@@ -26,7 +26,8 @@ public slots:
 
 signals:
     // Позволяет применить отправленные клиентом изменения в виджете.
-    void applyData(const QVector<int> &sentData);
+    //void applyData(const QVector<int> &sentData);
+    void applyData(int row, int column, int value);
 };
 
 #endif // SERVER_HPP

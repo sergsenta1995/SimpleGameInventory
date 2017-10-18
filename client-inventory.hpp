@@ -2,7 +2,7 @@
 #define CLIENT_INVENTORY_HPP
 
 #include <QMediaPlayer>
-#include "inventory.hpp"
+#include "inventory-widget.hpp"
 #include "client.hpp"
 #include "inventory-facade.hpp"
 
@@ -11,7 +11,8 @@
  * \details Поддерживает drag 'n' drop, отправляет изменения инвентаря в базу.
  *          Визуальная составляющая инициализируется в базовом классе.
  */
-class ClientInventory : public Inventory {
+class ClientInventory : public InventoryWidget {
+    Q_OBJECT
 public:
     explicit ClientInventory(QWidget *parent = nullptr);
     //! Инициализирует объект клиента, который отвечает за отправку данных на сервер.
@@ -33,11 +34,11 @@ private:
     //! Событие, обрабатывающее нажатие клавиши мыши на виджете.
     void mousePressEvent(QMouseEvent *event) override;
     //! Перезаписывает ячейку после перетаскивания.
-    void rewriteItem(int row, int column, int newValue, const QVariant &userData = QStringList());
+    void rewriteItem(int row, int column, int newValue);
 
     QTableWidgetItem *dragItem; ///< перетаскиваемый элемент ячейки
     QMediaPlayer     *player;   ///< объект для воспроизведения звука откумывания яблока
-    Client           *client;   ///< объект для отправки данных на сервер
+    Client           *client;   ///< объект для отправки данных на сервер    
 };
 
 #endif // CLIENT_INVENTORY_HPP

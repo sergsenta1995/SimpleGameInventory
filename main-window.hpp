@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPropertyAnimation>
+#include "inventory-presenter.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,7 @@ private:
     Ui::MainWindow     *ui;
     QPropertyAnimation *animation;              ///< управляет анимацией показа главного меню
     QDialog            *clientOrServerChoise;   ///< управляет выбором конфигурации: клиент или сервер
+    InventoryPresenter *presenter;
 
 private slots:
     //! Обрабатывает нажатие на кнопку "Новая игра".
