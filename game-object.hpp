@@ -18,6 +18,7 @@ public:
     explicit GameObject(QWidget *parent = nullptr);
     void setType(const QString type_);
     void setPicture(const QString picture_);
+
 protected:
     QString           type;     ///< тип предмета
     QString           picture;  ///< путь к картинке предмета

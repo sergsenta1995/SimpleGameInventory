@@ -9,19 +9,24 @@ class InventoryFacade;
 typedef QVector<QVector<QPair<int, QString>>> Content;
 typedef QVector<QPair<int, QString>> CellContent;
 
+/*!
+ * \brief Базовый класс модели инвентаря.
+ */
 class Inventory : QObject{
     Q_OBJECT
 
 public:
     explicit Inventory();
-    void update(int row, int column, int value);
-    void setValue(int row, int column, int value, const QString &picture);
+    //! Обновляет ячейку инвентаря с отправкой данных в базу.
+    void update(int row, int column, int value, const QString &picture);
+    //! Устанавливает данные в ячейку.
+    void setupData(int row, int column, int value, const QString &picture);
     void setupSize(int dimension);    
-    Content getContent();
+    Content getContent();    
 
 protected:
     InventoryFacade *facade;
-    Content content;
+    Content          content;
 };
 
 #endif // INVENTORY_HPP

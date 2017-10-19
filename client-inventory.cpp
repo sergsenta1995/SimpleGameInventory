@@ -45,11 +45,6 @@ ClientInventory::ClientInventory(QWidget *parent):
     setStyleSheet("selection-background-color: rgba(128, 128, 128, 0);");
 }
 
-void ClientInventory::startClient()
-{
-
-}
-
 void ClientInventory::dragEnterEvent(QDragEnterEvent *event)
 {
     // Если предмет захвачен, продолжать его держать.
@@ -133,26 +128,6 @@ QMimeData* ClientInventory::mimeData(const QList<QTableWidgetItem *> items) cons
     data->setProperty("picture", items.at(0)->data(Qt::UserRole));
 
     return data;    
-}
-
-void ClientInventory::rewriteItem(int row, int column, int newValue, const QString &picture)
-{
-    QTableWidgetItem *newItem = item(row, column);
-    if (newItem == nullptr)
-    {
-        newItem = new QTableWidgetItem;
-        newItem->setText(QString::number(newValue));
-    }
-    else
-    {
-        int oldValue = newItem->data(Qt::DisplayRole).toInt();
-        newItem->setText(QString::number(oldValue + newValue));        
-    }
-    newItem->setData(Qt::UserRole,picture);
-
-    newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
-    newItem->setBackground(QPixmap(picture).scaled(100, 100));
-    this->setItem(row, column, newItem);
 }
 
 void ClientInventory::mousePressEvent(QMouseEvent *event)

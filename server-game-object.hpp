@@ -1,5 +1,5 @@
-#ifndef SERVERGAMEOBJECT_HPP
-#define SERVERGAMEOBJECT_HPP
+#ifndef SERVER_GAME_OBJECT_HPP
+#define SERVER_GAME_OBJECT_HPP
 
 #include "game-object.hpp"
 
@@ -14,4 +14,4 @@ public:
     explicit ServerGameObject(QWidget *parent = nullptr);
 };
 
-#endif // SERVERGAMEOBJECT_HPP
+#endif // SERVER_GAME_OBJECT_HPP

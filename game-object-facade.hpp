@@ -1,5 +1,5 @@
-#ifndef GAMEOBJECTFACADE_HPP
-#define GAMEOBJECTFACADE_HPP
+#ifndef GAME_OBJECT_FACADE_HPP
+#define GAME_OBJECT_FACADE_HPP
 
 #include "game-object.hpp"
 
@@ -15,4 +15,4 @@ public:
     void init(GameObject &gameObject);
 };
 
-#endif // GAMEOBJECTFACADE_HPP
+#endif // GAME_OBJECT_FACADE_HPP

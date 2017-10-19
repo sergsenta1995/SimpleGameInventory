@@ -1,5 +1,5 @@
-#ifndef INVENTORYFACADE_HPP
-#define INVENTORYFACADE_HPP
+#ifndef INVENTORY_FACADE_HPP
+#define INVENTORY_FACADE_HPP
 
 #include "inventory.hpp"
 
@@ -8,8 +8,9 @@ class Inventory;
 /*!
  * \brief Класс для работы с данными инвентаря.
  */
-class InventoryFacade : QObject{
+class InventoryFacade : QObject {
     Q_OBJECT
+
 public:
     explicit InventoryFacade();
     //! Инициализирует ячейки инвентаря.
@@ -18,4 +19,4 @@ public:
     void update(int row, int column, int value);
 };
 
-#endif // INVENTORYFACADE_HPP
+#endif // INVENTORY_FACADE_HPP

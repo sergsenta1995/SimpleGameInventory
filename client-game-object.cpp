@@ -4,7 +4,6 @@
 #include <QMimeData>
 #include <QDrag>
 #include <QPainter>
-#include <QDebug>
 
 ClientGameObject::ClientGameObject(QWidget *parent):
     GameObject(parent)

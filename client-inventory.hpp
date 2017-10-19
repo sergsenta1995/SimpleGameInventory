@@ -14,9 +14,7 @@
 class ClientInventory : public InventoryWidget {
     Q_OBJECT
 public:
-    explicit ClientInventory(QWidget *parent = nullptr);
-    //! Инициализирует объект клиента, который отвечает за отправку данных на сервер.
-    void startClient();    
+    explicit ClientInventory(QWidget *parent = nullptr);    
 
 private:
     //! Событие, обрабатывающее пересечение границ виджета перетаскиваемым объектом.
@@ -33,8 +31,6 @@ private:
     QMimeData* mimeData(const QList<QTableWidgetItem *> items) const override;
     //! Событие, обрабатывающее нажатие клавиши мыши на виджете.
     void mousePressEvent(QMouseEvent *event) override;
-    //! Перезаписывает ячейку после перетаскивания.
-    void rewriteItem(int row, int column, int newValue, const QString &picture);
 
     QTableWidgetItem *dragItem; ///< перетаскиваемый элемент ячейки
     QMediaPlayer     *player;   ///< объект для воспроизведения звука откумывания яблока    

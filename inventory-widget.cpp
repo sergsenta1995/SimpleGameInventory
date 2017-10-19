@@ -2,8 +2,6 @@
 #include <QHeaderView>
 #include <QSqlResult>
 
-#include <QDebug>
-
 InventoryWidget::InventoryWidget(QWidget *parent) :
     QTableWidget(parent)
 {
@@ -35,10 +33,35 @@ void InventoryWidget::init(const Content &content)
             QString picture = content[i][j].second;
             newItem->setData(Qt::UserRole, picture);
 
-            newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
-            //QString picture = ":/images/red-apple.jpg";
+            newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);            
             newItem->setBackground(QPixmap(picture).scaled(100, 100));            
             this->setItem(i, j, newItem);
         }
     }
+}
+
+void InventoryWidget::rewriteItem(int row, int column, int newValue, const QString &picture)
+{
+    if (newValue == 0)
+    {
+        this->setItem(row, column, nullptr);
+        return;
+    }
+
+    QTableWidgetItem *newItem = item(row, column);
+    if (newItem == nullptr)
+    {
+        newItem = new QTableWidgetItem;
+        newItem->setText(QString::number(newValue));
+    }
+    else
+    {
+        int oldValue = newItem->data(Qt::DisplayRole).toInt();
+        newItem->setText(QString::number(oldValue + newValue));
+    }
+    newItem->setData(Qt::UserRole,picture);
+
+    newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
+    newItem->setBackground(QPixmap(picture).scaled(100, 100));
+    this->setItem(row, column, newItem);
 }

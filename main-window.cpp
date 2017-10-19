@@ -40,14 +40,12 @@ void MainWindow::configurationSetup(QWidget *parent)
     configurationSelection->exec();
     if (configurationSelection->clickedButton() == serverButton)
     {
-        ui->stackedWidget->setCurrentIndex(SERVER_WIDGET);
-        ui->serverInventory->startServer();
+        ui->stackedWidget->setCurrentIndex(SERVER_WIDGET);        
         presenter = new ServerPresenter(ui->serverInventory);
     }
     else
     {
-        ui->stackedWidget->setCurrentIndex(CLIENT_WIDGET);
-        ui->clientInventory->startClient();
+        ui->stackedWidget->setCurrentIndex(CLIENT_WIDGET);        
         presenter = new ClientPresenter(ui->clientInventory);
     }
 }

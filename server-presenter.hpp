@@ -1,9 +1,13 @@
-#ifndef SERVERPRESENTER_HPP
-#define SERVERPRESENTER_HPP
+#ifndef SERVER_PRESENTER_HPP
+#define SERVER_PRESENTER_HPP
 
 #include "abstract-presenter.hpp"
 #include "server.hpp"
 
+/*!
+ * \brief Серверное представление.
+ * \details Отвечает за взаимодействие между View <-> Server
+ */
 class ServerPresenter : public AbstractPresenter {
     Q_OBJECT
 
@@ -17,4 +21,4 @@ public slots:
     void slotApplyData(int row, int column, int value, const QString &picture);
 };
 
-#endif // SERVERPRESENTER_HPP
+#endif // SERVER_PRESENTER_HPP

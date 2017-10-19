@@ -11,6 +11,6 @@ ClientPresenter::ClientPresenter(InventoryWidget *widget) :
 
 void ClientPresenter::onUpdateCell(int row, int column, int value, const QString &picture)
 {
-    model->update(row, column, value);
+    model->update(row, column, value, picture);
     client->sendToServer(row, column, value, picture);
 }

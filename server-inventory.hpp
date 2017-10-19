@@ -1,5 +1,5 @@
-#ifndef SERVERINVENTORY_HPP
-#define SERVERINVENTORY_HPP
+#ifndef SERVER_INVENTORY_HPP
+#define SERVER_INVENTORY_HPP
 
 #include "inventory-widget.hpp"
 #include "server.hpp"
@@ -10,20 +10,12 @@
  * \details Не поддерживает drag 'n' drop, принимает изменения от виджета на стороне клиента.
  *          Визуальная составляющая инициализируется в базовом классе.
  */
+// FIX: Пустой класс. Можно удалять и использовать базовый?
 class ServerInventory : public InventoryWidget {
     Q_OBJECT
 
 public:
     explicit ServerInventory(QWidget *parent = nullptr);
-    //! Инициализирует объект ервера, который отвечает за приём данных.
-    void startServer();
-
-public slots:
-    //! Применяет изменения виджета отосланные от клиента.    
-    void rewriteItem(int dropRow, int dropColumn, int dropValue, const QString &picture) override;
-
-//private:
-//    Server *server; ///< объект для приёма данных от клиента
 };
 
-#endif // SERVERINVENTORY_HPP
+#endif // SERVER_INVENTORY_HPP

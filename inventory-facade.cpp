@@ -1,6 +1,5 @@
 #include "inventory-facade.hpp"
 #include <QSqlQuery>
-#include <QDebug>
 
 InventoryFacade::InventoryFacade()
 {
@@ -34,21 +33,19 @@ void InventoryFacade::init(Inventory &inventory)
         int row = query.value("row").toInt();
         int column = query.value("column").toInt();
         int value = query.value("count_objects").toInt();
-        QString picture = query.value("picture").toString();
-        inventory.setValue(row, column, value, picture);
+        QString picture = query.value("picture").toString();       
+        inventory.setupData(row, column, value, picture);
     }
 
     query.clear();
     query.prepare("SELECT * "
                   "FROM inventory "
-                  "WHERE id = ? ");
+                  "WHERE id = :id ");
     // NOTE: По умочлчанию первый инвентарь,
     //       т. к. возможноть выбора ивентаря не предусматривалась.
-    query.addBindValue(1);
+    query.bindValue(":id", 1);
     query.exec();
     query.next();
-    //int dimension = query.value("dimension").toInt();
-    //inventory.setRowCount(dimension);
 }
 
 void InventoryFacade::update(int row, int column, int value)

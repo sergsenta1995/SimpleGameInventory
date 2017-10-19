@@ -4,6 +4,10 @@
 #include "abstract-presenter.hpp"
 #include "client.hpp"
 
+/*!
+ * \brief Клиентское представление.
+ * \details Отвечает за взаимодействие между View <-> Model <-> Client <-> DB
+ */
 class ClientPresenter : public AbstractPresenter {
     Q_OBJECT
 
@@ -15,7 +19,6 @@ private:
 
 public slots:
     void onUpdateCell(int row, int column, int value, const QString &picture);
-
 };
 
 #endif // CLIENT_PRESENTER_HPP

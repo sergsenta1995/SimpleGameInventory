@@ -5,6 +5,10 @@
 #include "inventory.hpp"
 #include "inventory-widget.hpp"
 
+
+/*!
+ * \brief Базовый класс для представлений.
+ */
 class AbstractPresenter : public QObject {
     Q_OBJECT
 
