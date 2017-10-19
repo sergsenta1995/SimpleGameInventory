@@ -12,10 +12,10 @@ void GameObjectFacade::init(GameObject &gameObject)
     QSqlQuery query;
     query.prepare("SELECT * "
                   "FROM game_object "
-                  "WHERE id = ? ");
+                  "WHERE id = :id ");
     // NOTE: По умочлчанию первый предмет,
     //       т. к. возможноть выбора предмета не предусматривалась.
-    query.addBindValue(1);
+    query.bindValue(":id", 1);
     query.exec();
 
     query.next();

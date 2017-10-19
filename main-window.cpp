@@ -42,13 +42,13 @@ void MainWindow::configurationSetup(QWidget *parent)
     {
         ui->stackedWidget->setCurrentIndex(SERVER_WIDGET);
         ui->serverInventory->startServer();
-        presenter = new InventoryPresenter(new Inventory, ui->serverInventory);
+        presenter = new ServerPresenter(ui->serverInventory);
     }
     else
     {
         ui->stackedWidget->setCurrentIndex(CLIENT_WIDGET);
         ui->clientInventory->startClient();
-        presenter = new InventoryPresenter(new Inventory, ui->clientInventory);
+        presenter = new ClientPresenter(ui->clientInventory);
     }
 }
 

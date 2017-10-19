@@ -21,14 +21,14 @@ void Client::slotError(QAbstractSocket::SocketError err)
     qDebug() << strError;
 }
 
-void Client::sendToServer(int row, int column, int value)
-{
+void Client::sendToServer(int row, int column, int value, const QString &picture)
+{    
     QByteArray  block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_9);
 
     out << quint16(0);
-    out << row << column << value;
+    out << row << column << value << picture.toUtf8();
     out.device()->seek(0);
     out << quint16(block.size() - sizeof(quint16));
 

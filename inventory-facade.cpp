@@ -22,11 +22,11 @@ void InventoryFacade::init(Inventory &inventory)
 
     query.prepare("SELECT row, column, count_objects, type, picture "
                   "FROM inventory_content, game_object "
-                  "WHERE id_inventory = ? and "
+                  "WHERE id_inventory = :id and "
                   "game_object.id = inventory_content.id_object");
     // NOTE: По умочлчанию первый инвентарь,
     //       т. к. возможноть выбора ивентаря не предусматривалась.
-    query.addBindValue(1);
+    query.bindValue(":id", 1);
     query.exec();
 
     while (query.next())
@@ -34,7 +34,8 @@ void InventoryFacade::init(Inventory &inventory)
         int row = query.value("row").toInt();
         int column = query.value("column").toInt();
         int value = query.value("count_objects").toInt();
-        inventory.setValue(row, column, value);
+        QString picture = query.value("picture").toString();
+        inventory.setValue(row, column, value, picture);
     }
 
     query.clear();

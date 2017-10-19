@@ -2,6 +2,8 @@
 #include <QHeaderView>
 #include <QSqlResult>
 
+#include <QDebug>
+
 InventoryWidget::InventoryWidget(QWidget *parent) :
     QTableWidget(parent)
 {
@@ -18,20 +20,24 @@ InventoryWidget::InventoryWidget(QWidget *parent) :
     setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
-void InventoryWidget::init(const QVector<QVector<int> > &content)
+void InventoryWidget::init(const Content &content)
 {
     for(int i = 0; i < content.size(); ++i)
     {
         for (int j = 0; j < content[i].size(); ++j)
         {
-            if (content[i][j] == 0)
+            if (content[i][j].first == 0)
                 continue;
 
             QTableWidgetItem *newItem = new QTableWidgetItem();
-            newItem->setText(QString::number(content[i][j]));
+            newItem->setText(QString::number(content[i][j].first));
+
+            QString picture = content[i][j].second;
+            newItem->setData(Qt::UserRole, picture);
+
             newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
-            QString picture = ":/images/red-apple.jpg";
-            newItem->setBackground(QPixmap(picture).scaled(100, 100));
+            //QString picture = ":/images/red-apple.jpg";
+            newItem->setBackground(QPixmap(picture).scaled(100, 100));            
             this->setItem(i, j, newItem);
         }
     }

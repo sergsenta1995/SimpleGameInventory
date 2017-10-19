@@ -7,12 +7,12 @@ ServerInventory::ServerInventory(QWidget *parent):
 
 void ServerInventory::startServer()
 {    
-    server = new Server(2323);
+    //server = new Server(2323);
 
-    connect(server, &Server::applyData, this, slotApplyData);
+    //connect(server, &Server::applyData, this, slotApplyData);
 }
 
-void ServerInventory::slotApplyData(int dropRow, int dropColumn, int dropValue)
+void ServerInventory::rewriteItem(int dropRow, int dropColumn, int dropValue, const QString &picture)
 {
     if (dropValue == 0)
     {
@@ -33,6 +33,6 @@ void ServerInventory::slotApplyData(int dropRow, int dropColumn, int dropValue)
     }
 
     newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
-    newItem->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
+    newItem->setBackground(QPixmap(picture).scaled(100, 100));
     this->setItem(dropRow, dropColumn, newItem);
 }

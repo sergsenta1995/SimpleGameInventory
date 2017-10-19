@@ -25,9 +25,8 @@ public slots:
     void slotReadClient();
 
 signals:
-    // Позволяет применить отправленные клиентом изменения в виджете.
-    //void applyData(const QVector<int> &sentData);
-    void applyData(int row, int column, int value);
+    //! Позволяет применить отправленные клиентом изменения в виджете.
+    void applyData(int row, int column, int value, const QString &picture);
 };
 
 #endif // SERVER_HPP

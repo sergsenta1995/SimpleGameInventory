@@ -47,7 +47,7 @@ ClientInventory::ClientInventory(QWidget *parent):
 
 void ClientInventory::startClient()
 {
-    client = new Client("localhost", 2323);
+
 }
 
 void ClientInventory::dragEnterEvent(QDragEnterEvent *event)
@@ -75,13 +75,13 @@ void ClientInventory::dragMoveEvent(QDragMoveEvent *event)
 bool ClientInventory::dropMimeData(int row, int column, const QMimeData *data, Qt::DropAction action)
 {
     int dragValue = data->text().toInt();
+    QString picture  = data->property("picture").toString();
 
     // Перетаскивание предмета в инвентарь.
     if (data->formats().at(0) == "application/x-dnditemdata")
-    {
-        emit changeCellData(row, column, 1);
-        rewriteItem(row, column, 1);
-        client->sendToServer(row, column, 1);
+    {        
+        emit changeCellData(row, column, 1, picture);
+        rewriteItem(row, column, 1, picture);
         dragItem = nullptr;
         return true;
     }
@@ -99,13 +99,12 @@ bool ClientInventory::dropMimeData(int row, int column, const QMimeData *data, Q
         return true;
     }
 
-    // Перетаскиваем между ячейками (перетаскиваемая не пуста).   
-    emit changeCellData(row, column, dragValue);
-    rewriteItem(row, column, dragValue);
-    client->sendToServer(row, column, dragValue);
+    // Перетаскиваем между ячейками (перетаскиваемая не пуста).
 
-    emit changeCellData(dragItem->row(), dragItem->column(), 0);
-    client->sendToServer(dragItem->row(), dragItem->column(), 0);
+    emit changeCellData(row, column, dragValue, picture);
+    rewriteItem(row, column, dragValue, picture);
+
+    emit changeCellData(dragItem->row(), dragItem->column(), 0, "");
     setItem(dragItem->row(), dragItem->column(), nullptr);    
 
     dragItem = nullptr;
@@ -126,30 +125,33 @@ QMimeData* ClientInventory::mimeData(const QList<QTableWidgetItem *> items) cons
     QMimeData *data = QTableWidget::mimeData(items);
     if (items.at(0) == nullptr)
     {
-        data->setText("0");        
+        data->setText("0");
         return data;
     }
 
     data->setText(items.at(0)->text());
+    data->setProperty("picture", items.at(0)->data(Qt::UserRole));
 
     return data;    
 }
 
-void ClientInventory::rewriteItem(int row, int column, int newValue)
+void ClientInventory::rewriteItem(int row, int column, int newValue, const QString &picture)
 {
     QTableWidgetItem *newItem = item(row, column);
     if (newItem == nullptr)
     {
         newItem = new QTableWidgetItem;
-        newItem->setText(QString::number(newValue));        
+        newItem->setText(QString::number(newValue));
     }
     else
     {
         int oldValue = newItem->data(Qt::DisplayRole).toInt();
         newItem->setText(QString::number(oldValue + newValue));        
     }
+    newItem->setData(Qt::UserRole,picture);
+
     newItem->setTextAlignment(Qt::AlignRight | Qt::AlignBottom);
-    newItem->setBackground(QPixmap(":/images/red-apple.jpg").scaled(100, 100));
+    newItem->setBackground(QPixmap(picture).scaled(100, 100));
     this->setItem(row, column, newItem);
 }
 
@@ -163,6 +165,7 @@ void ClientInventory::mousePressEvent(QMouseEvent *event)
             return;
 
         int value = tempItem->data(Qt::DisplayRole).toInt();
+        QString picture = tempItem->data(Qt::UserRole).toString();
         --value;
 
         player->stop();
@@ -170,14 +173,12 @@ void ClientInventory::mousePressEvent(QMouseEvent *event)
 
         if (value == 0)
         {            
-            emit changeCellData(tempItem->row(), tempItem->column(), 0);
-            client->sendToServer(tempItem->row(), tempItem->column(), 0);
+            emit changeCellData(tempItem->row(), tempItem->column(), 0, picture);
             setItem(tempItem->row(), tempItem->column(), nullptr);
             return;
         }
 
-        emit changeCellData(tempItem->row(), tempItem->column(), -1);
-        client->sendToServer(tempItem->row(), tempItem->column(), -1);
+        emit changeCellData(tempItem->row(), tempItem->column(), -1, picture);
 
         tempItem->setData(Qt::DisplayRole, value);
     }

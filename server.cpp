@@ -47,7 +47,11 @@ void Server::slotReadClient()
         int value = 0;
         in >> value;
 
-        emit applyData(row, column, value);
+        QByteArray picture;
+        in >> picture;
+        QString pic = picture;
+
+        emit applyData(row, column, value, pic);
 
         nextBlockSize = 0;
     }

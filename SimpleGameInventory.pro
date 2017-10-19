@@ -38,7 +38,9 @@ SOURCES += \
     inventory-facade.cpp \
     game-object-facade.cpp \
     inventory-widget.cpp \
-    inventory-presenter.cpp
+    abstract-presenter.cpp \
+    server-presenter.cpp \
+    client-presenter.cpp
 
 HEADERS += \
         main-window.hpp \
@@ -53,7 +55,9 @@ HEADERS += \
     inventory-facade.hpp \
     game-object-facade.hpp \
     inventory-widget.hpp \
-    inventory-presenter.hpp
+    abstract-presenter.hpp \
+    server-presenter.hpp \
+    client-presenter.hpp
 
 FORMS += \
         main-window.ui

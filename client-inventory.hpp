@@ -34,11 +34,10 @@ private:
     //! Событие, обрабатывающее нажатие клавиши мыши на виджете.
     void mousePressEvent(QMouseEvent *event) override;
     //! Перезаписывает ячейку после перетаскивания.
-    void rewriteItem(int row, int column, int newValue);
+    void rewriteItem(int row, int column, int newValue, const QString &picture);
 
     QTableWidgetItem *dragItem; ///< перетаскиваемый элемент ячейки
-    QMediaPlayer     *player;   ///< объект для воспроизведения звука откумывания яблока
-    Client           *client;   ///< объект для отправки данных на сервер    
+    QMediaPlayer     *player;   ///< объект для воспроизведения звука откумывания яблока    
 };
 
 #endif // CLIENT_INVENTORY_HPP

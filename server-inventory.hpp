@@ -19,12 +19,11 @@ public:
     void startServer();
 
 public slots:
-    //! Применяет изменения виджета отосланные от клиента.
-    //void slotApplyData(const QVector<int> &sentData);
-    void slotApplyData(int dropRow, int dropColumn, int dropValue);
+    //! Применяет изменения виджета отосланные от клиента.    
+    void rewriteItem(int dropRow, int dropColumn, int dropValue, const QString &picture) override;
 
-private:
-    Server *server; ///< объект для приёма данных от клиента
+//private:
+//    Server *server; ///< объект для приёма данных от клиента
 };
 
 #endif // SERVERINVENTORY_HPP

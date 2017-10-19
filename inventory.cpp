@@ -10,27 +10,28 @@ Inventory::Inventory()
 void Inventory::update(int row, int column, int value)
 {
     if (value == 0)
-        content[row][column] = 0;
+        content[row][column].first = 0;
     else
-        content[row][column] += value;
+        content[row][column].first += value;
 
-    facade->update(row, column, content[row][column]);
+    facade->update(row, column, content[row][column].first);
 }
 
-void Inventory::setValue(int row, int column, int value)
+void Inventory::setValue(int row, int column, int value, const QString &picture)
 {
-    content[row][column] = value;
+    content[row][column].first = value;
+    content[row][column].second = picture;
 }
 
 void Inventory::setupSize(int dimension)
 {
-    content = QVector<QVector<int>>(dimension);
+    content = Content(dimension);
 
     for(int i = 0; i < dimension; i++)
-        content[i] = QVector<int>(dimension);
+        content[i] = CellContent(dimension);
 }
 
-QVector<QVector<int> > Inventory::getContent()
+Content Inventory::getContent()
 {
     return content;
 }
